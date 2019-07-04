@@ -9,13 +9,13 @@ import numpy as np
 # PARAMETERS.
 ################################################################################
 # Path to bop_renderer.
-bop_renderer_path = '/net/rmc-lx0314/home_local/sund_ma/src/foreign_packages/bop/bop_renderer/build'
+bop_renderer_path = '/path/to/bop_renderer/build'
 
 # Path to bop_toolkit which contains the Python renderer.
-bop_toolkit_path = '/net/rmc-lx0314/home_local/sund_ma/src/foreign_packages/bop/bop_toolkit'
+bop_toolkit_path = '/path/to/bop_toolkit'
 
 # Path to a 3D object model (in PLY format).
-modelPath = '/home_local/sund_ma/data/t-less/models_cad/obj_01.ply'
+modelPath = '/local/datasets/bop/hinterstoisser/models/obj_01.ply'
 
 # Object pose and camera parameters.
 R = np.eye(3)
