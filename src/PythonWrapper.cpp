@@ -118,7 +118,7 @@ py::array PythonWrapper::getDepthImage(unsigned int handle) {
       if (y < 0 || x < 0 || y >= height || x >= width) {
         arrData[i] = 0;
       } else {
-        arrData[i] = static_cast<uint16_t>(buffData[i]);
+        arrData[i] = static_cast<uint16_t>(round(buffData[i]));
       }
     }
   }

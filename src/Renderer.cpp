@@ -17,8 +17,8 @@ Renderer::Renderer() :
     lightColor(glm::vec3(1.0f, 1.0f, 1.0f)),
     lightAmbientWeight(0.5f),
     lightDiffuseWeight(1.0f),
-    lightSpecularWeight(1.0f),
-    lightSpecularShininess(32.0f) {
+    lightSpecularWeight(0.0f),
+    lightSpecularShininess(0.0f) {
 }
 
 Renderer::~Renderer() {

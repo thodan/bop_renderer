@@ -180,8 +180,6 @@ glm::mat4 GPUBuffer::calculateProjectionMatrix(
   // and find the closest and farthest point
   float znear = std::numeric_limits<float>::max();
   float zfar = -znear;
-  // float znear = 10;
-  // float zfar = 2000;
 
   // Since we will only need the z value we extract the third row from the mv matrix
   glm::vec4 mvz(mv[0][2], mv[1][2], mv[2][2], mv[3][2]);
