@@ -31,7 +31,7 @@ sys.path.append(bop_renderer_path)
 import bop_renderer
 
 sys.path.append(bop_toolkit_path)
-from bop_toolkit import inout, renderer_py
+from bop_toolkit_lib import inout, renderer_py
 
 # Init the renderers.
 # ------------------------------------------------------------------------------
@@ -40,6 +40,11 @@ ren = bop_renderer.Renderer()
 ren.init(im_size[0], im_size[1])
 obj_id = 1
 ren.add_object(obj_id, modelPath)
+
+# Init the Python renderer.
+ren_py = renderer_py.RendererPython( im_size[0], im_size[1])
+obj_id = 1
+ren_py.add_object(obj_id, modelPath)
 
 # Object model and camera matrix (will be used by the Python renderer).
 model = inout.load_ply(modelPath)
@@ -64,9 +69,8 @@ for renderer_type in renderer_types:
       rgb = ren.get_color_image(obj_id)
       depth = ren.get_depth_image(obj_id)
     else:
-      rgb, depth = renderer_py.render(
-        model, im_size, K, R, t, clip_near=10, mode='rgb+depth')
-
+      res_dict = ren_py.render_object(obj_id, R, t, fx, fy, cx, cy)
+      depth_p, rgb_p = res_dict['depth'],res_dict['rgb']
     times.append(time.time() - t_start)
 
   print('Average rendering time for {} renderer: {}'.format(
@@ -82,8 +86,8 @@ rgb_c = ren.get_color_image(obj_id)
 depth_c = ren.get_depth_image(obj_id)
 
 # Python renderer.
-rgb_p, depth_p = renderer_py.render(
-  model, im_size, K, R, t, clip_near=10, mode='rgb+depth')
+res_dict = ren_py.render_object(obj_id, R, t, fx, fy, cx, cy)
+depth_p, rgb_p = res_dict['depth'],res_dict['rgb']
 
 # Difference of the RGB renderings.
 rgb_diff = np.abs(
