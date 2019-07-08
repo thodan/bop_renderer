@@ -15,7 +15,7 @@ bop_renderer_path = '/path/to/bop_renderer/build'
 bop_toolkit_path = '/path/to/bop_toolkit'
 
 # Path to a 3D object model (in PLY format).
-model_path = '/local/datasets/bop/hinterstoisser/models/obj_01.ply'
+model_path = '/datasets/bop/lm/models/obj_000001.ply'
 
 # Object pose and camera parameters.
 R = np.eye(3)
