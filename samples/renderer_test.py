@@ -42,7 +42,7 @@ obj_id = 1
 ren.add_object(obj_id, model_path)
 
 # Init the Python renderer.
-ren_py = renderer_py.RendererPython( im_size[0], im_size[1])
+ren_py = renderer_py.RendererPython(im_size[0], im_size[1])
 obj_id = 1
 ren_py.add_object(obj_id, model_path)
 
@@ -70,7 +70,7 @@ for renderer_type in renderer_types:
       depth = ren.get_depth_image(obj_id)
     else:
       res_dict = ren_py.render_object(obj_id, R, t, fx, fy, cx, cy)
-      depth_p, rgb_p = res_dict['depth'],res_dict['rgb']
+      depth_p, rgb_p = res_dict['depth'], res_dict['rgb']
     times.append(time.time() - t_start)
 
   print('Average rendering time for {} renderer: {}'.format(
@@ -87,7 +87,7 @@ depth_c = ren.get_depth_image(obj_id)
 
 # Python renderer.
 res_dict = ren_py.render_object(obj_id, R, t, fx, fy, cx, cy)
-depth_p, rgb_p = res_dict['depth'],res_dict['rgb']
+depth_p, rgb_p = res_dict['depth'], res_dict['rgb']
 
 # Difference of the RGB renderings.
 rgb_diff = np.abs(
