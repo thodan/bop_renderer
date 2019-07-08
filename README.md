@@ -18,7 +18,9 @@ cd osmesa-install/build
 ../osmesa-install.sh
 ```
 
-The BOP Renderer depends also on the following header-only libraries, which are provided in the folder *3rd* (no installation is required for these libraries): [glm](https://glm.g-truc.net/0.9.9/index.html), [png++](https://www.nongnu.org/pngpp/), [pybind11](https://github.com/pybind/pybind11), [yaml-cpp](https://github.com/jbeder/yaml-cpp/), [RPly](http://w3.impa.br/~diego/software/rply/).
+You will also need to install [yaml-cpp](https://github.com/jbeder/yaml-cpp/).
+
+Moreover, the BOP Renderer depends on the following header-only libraries, which are provided in the folder *3rd* (no installation is required for these libraries): [glm](https://glm.g-truc.net/0.9.9/index.html), [png++](https://www.nongnu.org/pngpp/), [pybind11](https://github.com/pybind/pybind11), [RPly](http://w3.impa.br/~diego/software/rply/).
 
 ### Compilation
 

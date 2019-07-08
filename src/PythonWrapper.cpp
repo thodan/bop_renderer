@@ -3,27 +3,27 @@
 #include "glm/gtc/type_ptr.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
-#include "PyRenderer.h"
+#include "PythonWrapper.h"
 
 // Ref:
 // http://pybind11.readthedocs.io/en/master/advanced/pycpp/numpy.html?highlight=numpy
 // https://stackoverflow.com/questions/44659924/returning-numpy-arrays-via-pybind11
 
-PyRenderer::PyRenderer() {
+PythonWrapper::PythonWrapper() {
 }
 
-PyRenderer::~PyRenderer() {
+PythonWrapper::~PythonWrapper() {
 }
 
-bool PyRenderer::init(int width, int height) {
+bool PythonWrapper::init(int width, int height) {
   return renderer.init(width, height);
 }
 
-void PyRenderer::setLight(const std::array<float, 3> lightCamPos,
-                          const std::array<float, 3> lightColor,
-                          float lightAmbientWeight, float lightDiffuseWeight,
-                          float lightSpecularWeight,
-                          float lightSpecularShininess) {
+void PythonWrapper::setLight(const std::array<float, 3> lightCamPos,
+                             const std::array<float, 3> lightColor,
+                             float lightAmbientWeight, float lightDiffuseWeight,
+                             float lightSpecularWeight,
+                             float lightSpecularShininess) {
   glm::vec3 _lightCamPos(lightCamPos[0], lightCamPos[1], lightCamPos[2]);
   glm::vec3 _lightColor(lightColor[0], lightColor[1], lightColor[2]);
   renderer.setLight(_lightCamPos, _lightColor, lightAmbientWeight,
@@ -31,19 +31,19 @@ void PyRenderer::setLight(const std::array<float, 3> lightCamPos,
                     lightSpecularShininess);
 }
 
-bool PyRenderer::addObject(unsigned int objId, const std::string &filename) {
+bool PythonWrapper::addObject(unsigned int objId, const std::string &filename) {
   return renderer.addObject(objId, filename);
 }
 
-void PyRenderer::removeObject(unsigned int handle) {
+void PythonWrapper::removeObject(unsigned int handle) {
   renderer.removeObject(handle);
 }
 
-void PyRenderer::renderObject(unsigned int handle,
-                              const std::array<float, 9> R,
-                              const std::array<float, 3> t,
-                              float fx, float fy, float cx, float cy,
-                              float skew, float xZero, float yZero) {
+void PythonWrapper::renderObject(unsigned int handle,
+                                 const std::array<float, 9> R,
+                                 const std::array<float, 3> t,
+                                 float fx, float fy, float cx, float cy,
+                                 float skew, float xZero, float yZero) {
   glm::mat3 _R;
   for (unsigned int x = 0; x < 3; x++) {
     for (unsigned int y = 0; y < 3; y++) {
@@ -60,7 +60,7 @@ void PyRenderer::renderObject(unsigned int handle,
   renderer.renderObject(handle, pose, fx, fy, cx, cy, skew, xZero, yZero);
 }
 
-py::array PyRenderer::getColorImage(unsigned int handle) {
+py::array PythonWrapper::getColorImage(unsigned int handle) {
 
   float *buffData = renderer.getBuffer(handle, OA_COLORS);
 
@@ -103,7 +103,7 @@ py::array PyRenderer::getColorImage(unsigned int handle) {
   return arr;
 }
 
-py::array PyRenderer::getDepthImage(unsigned int handle) {
+py::array PythonWrapper::getDepthImage(unsigned int handle) {
 
   float *buffData = renderer.getBuffer(handle, OA_DEPTH);
 

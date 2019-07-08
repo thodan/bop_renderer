@@ -9,11 +9,11 @@
 namespace py = pybind11;
 
 
-class PyRenderer {
+class PythonWrapper {
 public:
-  PyRenderer();
+  PythonWrapper();
 
-  ~PyRenderer();
+  ~PythonWrapper();
 
   bool init(int width, int height);
 
@@ -43,13 +43,13 @@ private:
 
 // Interface for Python.
 PYBIND11_MODULE(bop_renderer, m) {
-  py::class_<PyRenderer>(m, "PyRenderer")
+  py::class_<PythonWrapper>(m, "Renderer")
     .def (py::init())
-    .def("init", &PyRenderer::init)
-    .def("set_light", &PyRenderer::setLight)
-    .def("add_object", &PyRenderer::addObject)
-    .def("remove_object", &PyRenderer::removeObject)
-    .def("render_object", &PyRenderer::renderObject,
+    .def("init", &PythonWrapper::init)
+    .def("set_light", &PythonWrapper::setLight)
+    .def("add_object", &PythonWrapper::addObject)
+    .def("remove_object", &PythonWrapper::removeObject)
+    .def("render_object", &PythonWrapper::renderObject,
       py::arg("obj_id"),
       py::arg("R"),
       py::arg("t"),
@@ -60,6 +60,6 @@ PYBIND11_MODULE(bop_renderer, m) {
       py::arg("skew")=0.0f,
       py::arg("x_xero")=0.0f,
       py::arg("y_zero")=0.0f)
-    .def("get_depth_image", &PyRenderer::getDepthImage)
-    .def("get_color_image", &PyRenderer::getColorImage);
+    .def("get_depth_image", &PythonWrapper::getDepthImage)
+    .def("get_color_image", &PythonWrapper::getColorImage);
 }

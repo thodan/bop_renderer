@@ -32,7 +32,7 @@ sys.path.append(bop_renderer_path)
 import bop_renderer
 
 # Initialization of the renderer.
-ren = bop_renderer.PyRenderer()
+ren = bop_renderer.Renderer()
 ren.init(im_size[0], im_size[1])
 ren.set_light([0, 0, 0], [1.0, 1.0, 1.0], 0.5, 1.0, 1.0, 8.0)
 ren.add_object(obj_id, model_path)

@@ -39,7 +39,7 @@ include_directories(3rd/glm)
 # Header files.
 set(HEADERFILES
         src/Renderer.h
-        src/PyRenderer.h
+        src/PythonWrapper.h
         src/AbstractLoader.h
         src/PlyLoader.h
         src/GPUBuffer.h
@@ -77,6 +77,6 @@ target_link_libraries(renderer
 
 # Python module.
 pybind11_add_module(bop_renderer MODULE
-        src/PyRenderer.cpp ${HEADERFILES} ${SOURCEFILES})
+        src/PythonWrapper.cpp ${HEADERFILES} ${SOURCEFILES})
 target_link_libraries(bop_renderer PRIVATE
         ${OSMESA_LIBRARIES} ${PNG_LIBRARY} ${YAML_CPP_LIBRARIES})

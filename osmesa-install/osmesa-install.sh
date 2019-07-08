@@ -42,7 +42,7 @@ buildllvm="${LLVM_BUILD:-1}"
 llvmversion="${LLVM_VERSION:-4.0.1}"
 # redirect output and error to log file; exit script on error.
 silentlogging="${SILENT_LOG:-0}"
-buildosdemo="${BUILD_OSDEMO:-1}"
+buildosdemo="${BUILD_OSDEMO:-0}"
 osname=$(uname)
 # This script
 scriptdir=$(cd "$(dirname "$0")"; pwd)

@@ -36,7 +36,7 @@ from bop_toolkit import inout, renderer_py
 # Init the renderers.
 # ------------------------------------------------------------------------------
 # Init the C++ renderer.
-ren = bop_renderer.PyRenderer()
+ren = bop_renderer.Renderer()
 ren.init(im_size[0], im_size[1])
 obj_id = 1
 ren.add_object(obj_id, modelPath)
