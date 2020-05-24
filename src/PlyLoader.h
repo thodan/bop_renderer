@@ -13,11 +13,13 @@ public:
   bool loadFile(std::string filename);
 
 private:
-  bool hasNormals, hasFaceTexture;
+  bool hasNormals, hasFaceTexture, hasVertexTexture;
 
   static int vertex_cb(p_ply_argument arg);
 
   static int normal_cb(p_ply_argument arg);
+
+  static int texture_cb(p_ply_argument arg);
 
   static int face_cb(p_ply_argument arg);
 

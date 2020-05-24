@@ -316,3 +316,9 @@ void GPUBuffer::getPixelData(ObjectAttribute attr, float *data) {
     glReadPixels(0, 0, fbo.getWidth(), fbo.getHeight(), GL_DEPTH_COMPONENT, GL_FLOAT, data);
 //    fbo.disableFBO(); */
 }
+
+
+bool GPUBuffer::isTextureAvailable()
+{
+    return this->mesh->texture_coordinates_available;
+}
