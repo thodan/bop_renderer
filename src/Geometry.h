@@ -22,6 +22,9 @@ struct Geometry {
   // Optional texture
   Texture texture;
 
+  // Texture coordinates flag
+  bool texture_coordinates_available = false;
+
   glm::vec3 boxMin, boxMax;
 
   void calculateAABB() {
