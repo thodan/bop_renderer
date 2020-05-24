@@ -333,3 +333,9 @@ void Renderer::saveImage(unsigned int handle, ObjectAttribute attr,
     return;
   }
 }
+
+
+bool Renderer::isTextureAvailable(unsigned int objId)
+{
+    return renderers[objId]->isTextureAvailable();
+}

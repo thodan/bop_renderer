@@ -76,6 +76,8 @@ public:
   void saveImage(unsigned int handle, ObjectAttribute attr, int height, int width, int objectID,
                  const std::string &filename);
 
+  bool isTextureAvailable(unsigned int objId);
+
 private:
   Context context;
   int width, height;

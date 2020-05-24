@@ -42,6 +42,8 @@ public:
 
   void releaseResources();
 
+  bool isTextureAvailable();
+
 private:
 //    static GLSLProgram renderProg;
 //    static FrameBufferObject fbo;

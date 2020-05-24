@@ -62,7 +62,11 @@ void PythonWrapper::renderObject(unsigned int handle,
 
 py::array PythonWrapper::getColorImage(unsigned int handle) {
 
-  float *buffData = renderer.getBuffer(handle, OA_COLORS);
+  float *buffData;
+  if (renderer.isTextureAvailable(handle))
+    buffData = renderer.getBuffer(handle, OA_TEXTURED);
+  else
+    buffData = renderer.getBuffer(handle, OA_COLORS);
 
   int height = renderer.getHeight();
   int width = renderer.getWidth();
