@@ -192,9 +192,16 @@ bool PlyLoader::loadFile(std::string filename) {
     if (!loadTexture())
       return false;
   }
-  if (hasFaceTexture) {
-//        std::cout << "Converting face texture coordinates to vertex coordinates" << std::endl;
+  // If vertex texture coordinates are not available, try to obtain them from face texture coordinates
+  if (!hasVertexTexture && hasFaceTexture) {
+       // std::cout << "Converting face texture coordinates to vertex coordinates" << std::endl;
     faceTexCoordsToVertexTexCoords();
+  }
+  if (hasVertexTexture || hasFaceTexture) {
+      geo->texture_coordinates_available = true;
+  }
+  else {
+      std::cout << "Warning: mesh " << this->filename << " does not contain texture coordinates." << std::endl;
   }
   if (geo->indexList.empty()) {
 //        std::cout << "Generating index list" << std::endl;
