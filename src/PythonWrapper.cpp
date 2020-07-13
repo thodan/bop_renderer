@@ -60,6 +60,45 @@ void PythonWrapper::renderObject(unsigned int handle,
   renderer.renderObject(handle, pose, fx, fy, cx, cy, skew, xZero, yZero);
 }
 
+py::array PythonWrapper::getDepthImage(unsigned int handle) {
+
+  float *buffData = renderer.getBuffer(handle, OA_DEPTH);
+
+  int height = renderer.getHeight();
+  int width = renderer.getWidth();
+  int size = height * width;
+  auto *arrData = new uint16_t[size];
+
+  for (int y = 0; y < height; y++) {
+    for (int x = 0; x < width; x++) {
+      int i = x + width * y;
+      if (y < 0 || x < 0 || y >= height || x >= width) {
+        arrData[i] = 0;
+      } else {
+        arrData[i] = static_cast<uint16_t>(round(buffData[i]));
+      }
+    }
+  }
+
+  // Create a Python object that will free the allocated memory when destroyed
+  // Ref: https://stackoverflow.com/questions/44659924/returning-numpy-arrays-via-pybind11
+  py::capsule freeWhenDone(arrData, [](void *f) {
+    auto *data = reinterpret_cast<uint16_t *>(f);
+    delete[] data;
+  });
+
+  size_t typeSize = sizeof(uint16_t);
+  auto arr = py::array_t<uint16_t>(
+      {height, width}, // Shape
+      {width * typeSize, typeSize}, // C-style contiguous strides
+      arrData, // Data pointer
+      freeWhenDone); // Numpy array references this parent
+
+  delete[] buffData;
+
+  return arr;
+}
+
 py::array PythonWrapper::getColorImage(unsigned int handle) {
 
   float *buffData = renderer.getBuffer(handle, OA_COLORS);
@@ -103,22 +142,26 @@ py::array PythonWrapper::getColorImage(unsigned int handle) {
   return arr;
 }
 
-py::array PythonWrapper::getDepthImage(unsigned int handle) {
+py::array PythonWrapper::getLocalPosImage(unsigned int handle) {
 
-  float *buffData = renderer.getBuffer(handle, OA_DEPTH);
+  float *buffData = renderer.getBuffer(handle, OA_LOCALPOS);
 
   int height = renderer.getHeight();
   int width = renderer.getWidth();
-  int size = height * width;
-  auto *arrData = new uint16_t[size];
+  int size = height * width * 3;
+  auto *arrData = new float_t[size];
 
   for (int y = 0; y < height; y++) {
     for (int x = 0; x < width; x++) {
-      int i = x + width * y;
+      int i = (x + width * y) * 3;
       if (y < 0 || x < 0 || y >= height || x >= width) {
         arrData[i] = 0;
+        arrData[i + 1] = 0;
+        arrData[i + 2] = 0;
       } else {
-        arrData[i] = static_cast<uint16_t>(round(buffData[i]));
+        arrData[i] = static_cast<float_t>(buffData[i]);
+        arrData[i + 1] = static_cast<float_t>(buffData[i + 1]);
+        arrData[i + 2] = static_cast<float_t>(buffData[i + 2]);
       }
     }
   }
@@ -126,14 +169,14 @@ py::array PythonWrapper::getDepthImage(unsigned int handle) {
   // Create a Python object that will free the allocated memory when destroyed
   // Ref: https://stackoverflow.com/questions/44659924/returning-numpy-arrays-via-pybind11
   py::capsule freeWhenDone(arrData, [](void *f) {
-    auto *data = reinterpret_cast<uint16_t *>(f);
+    auto *data = reinterpret_cast<float_t *>(f);
     delete[] data;
   });
 
-  size_t typeSize = sizeof(uint16_t);
-  auto arr = py::array_t<uint16_t>(
-      {height, width}, // Shape
-      {width * typeSize, typeSize}, // C-style contiguous strides
+  size_t typeSize = sizeof(float_t);
+  auto arr = py::array_t<float_t>(
+      {height, width, 3}, // Shape
+      {width * 3 * typeSize, 3 * typeSize, typeSize}, // Strides
       arrData, // Data pointer
       freeWhenDone); // Numpy array references this parent
 

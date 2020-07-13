@@ -36,15 +36,11 @@ public:
 
   void getPixelData(ObjectAttribute attr, float *data);
 
-//    static bool initResources(int width, int height, std::string &errorString);
-//    static void releaseResources();
   bool initResources(int width, int height, std::string &errorString);
 
   void releaseResources();
 
 private:
-//    static GLSLProgram renderProg;
-//    static FrameBufferObject fbo;
   GLSLProgram renderProg;
   FrameBufferObject fbo;
 

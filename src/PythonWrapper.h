@@ -32,9 +32,11 @@ public:
                     float fx, float fy, float cx, float cy,
                     float skew, float xZero, float yZero);
 
+  py::array getDepthImage(unsigned int handle);
+
   py::array getColorImage(unsigned int handle);
 
-  py::array getDepthImage(unsigned int handle);
+  py::array getLocalPosImage(unsigned int handle);
 
 private:
   Renderer renderer;
@@ -61,5 +63,6 @@ PYBIND11_MODULE(bop_renderer, m) {
       py::arg("x_xero")=0.0f,
       py::arg("y_zero")=0.0f)
     .def("get_depth_image", &PythonWrapper::getDepthImage)
-    .def("get_color_image", &PythonWrapper::getColorImage);
+    .def("get_color_image", &PythonWrapper::getColorImage)
+    .def("get_local_pos_image", &PythonWrapper::getLocalPosImage);
 }

@@ -81,11 +81,6 @@ int PlyLoader::face_texcoord_cb(p_ply_argument arg) {
   }
 
   float val = static_cast<float>(ply_get_argument_value(arg));
-/*    if (valIndex < length/2)
-        self->geo->texcoordList[faceIndex][valIndex].x = val;
-    else
-        self->geo->texcoordList[faceIndex][valIndex - length/2].y = val;
-*/
   if (valIndex % 2 == 0)
     self->geo->texcoordList[faceIndex][valIndex / 2].x = val;
   else
@@ -170,20 +165,20 @@ bool PlyLoader::loadFile(std::string filename) {
 
 
   if (!geo->texture.filename.empty()) {
-//        std::cout << "Loading Texture "<<geo->texture.filename << std::endl;
+    //std::cout << "Loading Texture "<<geo->texture.filename << std::endl;
     if (!loadTexture())
       return false;
   }
   if (hasFaceTexture) {
-//        std::cout << "Converting face texture coordinates to vertex coordinates" << std::endl;
+    //std::cout << "Converting face texture coordinates to vertex coordinates" << std::endl;
     faceTexCoordsToVertexTexCoords();
   }
   if (geo->indexList.empty()) {
-//        std::cout << "Generating index list" << std::endl;
+    //std::cout << "Generating index list" << std::endl;
     makeGeometryIndexList();
   }
   if (!hasNormals) {
-//        std::cout << "Generating Normals" << std::endl;
+    //std::cout << "Generating Normals" << std::endl;
     calculateNormals();
   }
   if (geo->colors.empty())

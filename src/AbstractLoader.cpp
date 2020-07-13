@@ -47,7 +47,6 @@ void AbstractLoader::calculateNormals() {
     glm::vec3 &p3 = geo->vertices[face[2]];
 
     glm::vec3 normal = glm::normalize(glm::cross(p2 - p1, p3 - p1));
-//        faceNormals[i] = normal;
     for (int j = 0; j < face.size(); ++j) {
       geo->normals[face[j]] += normal;
       ++numNormals[face[j]];
@@ -144,5 +143,3 @@ bool AbstractLoader::loadTexture() {
 const std::string &AbstractLoader::getError() {
   return errorString;
 }
-
-

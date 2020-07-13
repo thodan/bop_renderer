@@ -9,12 +9,6 @@
 #include <vector>
 #include <map>
 
-// Fix for a problem with libpng
-// Ref: https://bugs.launchpad.net/ubuntu/+source/libpng/+bug/218409
-#define PNG_SKIP_SETJMP_CHECK
-
-#include "png++/png.hpp"
-
 class Renderer {
 public:
   Renderer();
@@ -60,21 +54,6 @@ public:
   // The same as above, only that a buffer is allocated.
   // You need to remove the buffer yourself
   float *getBuffer(unsigned int handle, ObjectAttribute attr);
-
-  png::image <png::gray_pixel_16> getDepthImage(unsigned int handle);
-
-  png::image <png::rgb_pixel> getColorImage(unsigned int handle);
-
-  // Save one attribute as raw file
-  // If convertToByte is true, then the components are converted to unsigned chars
-  // which is useful if you want to display the images in an image viewer.
-  void debugSave(unsigned int handle, ObjectAttribute attr, const std::string &filename, bool convertToByte);
-
-  //Save image as png file
-  //image type is defined by attribute
-  //image size is defined by height and width
-  void saveImage(unsigned int handle, ObjectAttribute attr, int height, int width, int objectID,
-                 const std::string &filename);
 
 private:
   Context context;

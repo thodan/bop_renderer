@@ -1,11 +1,7 @@
 #include <string>
 #include "glm/gtc/matrix_transform.hpp"
 #include "GPUBuffer.h"
-#include "UtilIO.h"
 #include "Shaders.h"
-
-//GLSLProgram GPUBuffer::renderProg;
-//FrameBufferObject GPUBuffer::fbo;
 
 GPUBuffer::GPUBuffer() : vao(0), mesh(nullptr) {
 }
@@ -18,6 +14,7 @@ GPUBuffer::~GPUBuffer() {
 
 void GPUBuffer::initMesh(Geometry *mesh) {
   this->mesh = mesh;
+
   // Create buffers
   glGenVertexArrays(1, &vao);
 
@@ -25,26 +22,31 @@ void GPUBuffer::initMesh(Geometry *mesh) {
   glGenBuffers(5, vbos.data());
 
   glBindVertexArray(vao);
+
   // Upload position
   glBindBuffer(GL_ARRAY_BUFFER, vbos[0]);
   glBufferData(GL_ARRAY_BUFFER, mesh->vertices.size() * 3 * sizeof(float), mesh->vertices.data(), GL_STATIC_DRAW);
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
   glEnableVertexAttribArray(0);
+
   // Upload normals
   glBindBuffer(GL_ARRAY_BUFFER, vbos[1]);
   glBufferData(GL_ARRAY_BUFFER, mesh->normals.size() * 3 * sizeof(float), mesh->normals.data(), GL_STATIC_DRAW);
   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
   glEnableVertexAttribArray(1);
+
   // Upload colors
   glBindBuffer(GL_ARRAY_BUFFER, vbos[2]);
   glBufferData(GL_ARRAY_BUFFER, mesh->colors.size() * 3 * sizeof(float), mesh->colors.data(), GL_STATIC_DRAW);
   glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
   glEnableVertexAttribArray(2);
+
   // Upload uv coordinates
   glBindBuffer(GL_ARRAY_BUFFER, vbos[3]);
   glBufferData(GL_ARRAY_BUFFER, mesh->texcoords.size() * 2 * sizeof(float), mesh->texcoords.data(), GL_STATIC_DRAW);
   glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
   glEnableVertexAttribArray(3);
+
   // Upload face indices
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbos[4]);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh->indexList.size() * sizeof(int), mesh->indexList.data(), GL_STATIC_DRAW);
@@ -52,6 +54,7 @@ void GPUBuffer::initMesh(Geometry *mesh) {
   // Load texture
   glGenTextures(1, &texture);
   glBindTexture(GL_TEXTURE_2D, texture);
+
   if (!mesh->texture.data.empty()) {
     // Upload texture data if present
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mesh->texture.width, mesh->texture.height,
@@ -152,28 +155,16 @@ void GPUBuffer::render(const glm::mat4 &modelTrans, const glm::mat4 &viewTrans,
   // Rendering
   glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-//    glClear(GL_DEPTH_BUFFER_BIT);
-
   glEnable(GL_DEPTH_TEST);
-
   // Do not cull faces because some object models have holes in the surface
   glDisable(GL_CULL_FACE);
-//    glCullFace(GL_BACK);
-//    glCullFace(GL_FRONT);
-//    glEnable(GL_CULL_FACE);
-
-//    glEnable(GL_BLEND);
-//    glDisable(GL_DEPTH_TEST);
-//    glEnable(GL_POLYGON_SMOOTH);
-//    glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
-//    glBlendFunc(GL_SRC_ALPHA_SATURATE, GL_ONE);
-
   glDrawElements(GL_TRIANGLES, mesh->indexList.size(), GL_UNSIGNED_INT, nullptr);
 }
 
 glm::mat4 GPUBuffer::calculateProjectionMatrix(
     float fx, float fy, float cx, float cy,
     float skew, float xZero, float yZero, const glm::mat4 &mv) {
+
   // Conventionally estimate near and far clipping plane to get the
   // best z buffer precision.
   // This is done by transforming the bounding box of the mesh
@@ -217,10 +208,6 @@ glm::mat4 GPUBuffer::calculateProjectionMatrix(
   proj[3][0] = 0.0f;
 
   //set second line
-//    proj[0][1] =  0.0f;
-//    proj[1][1] =  2.0f * fy / h;
-//    proj[2][1] =  (2.0f * cy - h + 2.0f * yZero) / h;
-//    proj[3][1] =  0.0f;
   proj[0][1] = 0.0f;
   proj[1][1] = -2.0f * fy / h;
   proj[2][1] = (-2.0f * cy + h + 2.0f * yZero) / h;
@@ -246,7 +233,7 @@ bool GPUBuffer::initResources(int width, int height, std::string &errorString) {
   // Initialize shaders
   // These variables are static to have a cheap way for a singleton,
   // so only initialize them if they are not already initialized
-//    if (!renderProg.isLinked()) {
+  //if (!renderProg.isLinked()) {
   try {
     renderProg.compileShader(vertexShaderCode,
                              GLSLShader::VERTEX);
@@ -257,9 +244,9 @@ bool GPUBuffer::initResources(int width, int height, std::string &errorString) {
     errorString = e.what();
     return false;
   }
-//    }
+  //}
 
-//    if (!fbo.isCreated()) {
+  //if (!fbo.isCreated()) {
   // Initialize frame buffer
   fbo.setDepthBufferEnabled(true);
   fbo.attachColorBuffer(width, height, GL_RGB32F); // object coordinates
@@ -274,7 +261,7 @@ bool GPUBuffer::initResources(int width, int height, std::string &errorString) {
     fbo.destroyFBO();
     return false;
   }
-//    }
+  //}
 
   return true;
 }
@@ -307,12 +294,4 @@ void GPUBuffer::getPixelData(ObjectAttribute attr, float *data) {
     glBindTexture(GL_TEXTURE_2D, fbo.getColorBufferHandle(static_cast<int>(attr)));
     glGetTexImage(GL_TEXTURE_2D, 0, GL_RED, GL_FLOAT, data);
   }
-
-/*    
-    // Read depth buffer
-	glBindRenderbuffer(GL_RENDERBUFFER, fbo.getDepthBufferHandle());
-//    fbo.enableFBO();
-    glReadBuffer(GL_COLOR_ATTACHMENT0);
-    glReadPixels(0, 0, fbo.getWidth(), fbo.getHeight(), GL_DEPTH_COMPONENT, GL_FLOAT, data);
-//    fbo.disableFBO(); */
 }
