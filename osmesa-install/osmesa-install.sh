@@ -1,5 +1,17 @@
 #!/bin/bash
 
+
+################################################################################
+
+# This is a modified version of a script available at:
+https://github.com/devernay/osmesa-install
+
+# The changes are documented in:
+https://github.com/thodan/bop_renderer/blob/master/README.md
+
+################################################################################
+
+
 # environment variables used by this script:
 # - OSMESA_PREFIX: where to install osmesa (must be writable)
 # - LLVM_PREFIX: where llvm is / should be installed
