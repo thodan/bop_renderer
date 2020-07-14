@@ -3,13 +3,17 @@
 
 ################################################################################
 
-# This is a modified version of a script available at:
-https://github.com/devernay/osmesa-install
+# Location of the osmesa installation:
+osmesaprefix="${OSMESA_PREFIX:-~/opt/osmesa}"
 
-# The changes are documented in:
-https://github.com/thodan/bop_renderer/blob/master/README.md
+# Location of the LLVM installation:
+llvmprefix="${LLVM_PREFIX:-~/opt/llvm}"
 
 ################################################################################
+
+
+# This is a modified version of: https://github.com/devernay/osmesa-install
+# The changes are documented in: https://github.com/thodan/bop_renderer/blob/master/README.md
 
 
 # environment variables used by this script:
@@ -23,8 +27,6 @@ set -e # Exit immediately if a command exits with a non-zero status
 set -u # Treat unset variables as an error when substituting.
 #set -x # Print commands and their arguments as they are executed.
 
-# prefix to the osmesa installation
-osmesaprefix="${OSMESA_PREFIX:-~/opt/osmesa}"
 # mesa version
 mesaversion="${OSMESA_VERSION:-17.1.6}"
 # mesa-demos version
@@ -47,8 +49,6 @@ mkjobs="${MKJOBS:-4}"
 osmesadriver=${OSMESA_DRIVER:-4}
 # do we want a mangled mesa + GLU ?
 mangled=0
-# the prefix to the LLVM installation
-llvmprefix="${LLVM_PREFIX:-~/opt/llvm}"
 # do we want to build the proper LLVM static libraries too? or are they already installed ?
 buildllvm="${LLVM_BUILD:-1}"
 llvmversion="${LLVM_VERSION:-4.0.1}"
