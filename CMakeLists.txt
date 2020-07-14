@@ -4,21 +4,18 @@ project(bop_renderer)
 
 # USER-SPECIFIC PARAMETERS.
 ################################################################################
-# Directory with the LLVM installation.
-set(LLVM_DIR ~/opt/llvm)
-
 # Directory with the OSMesa installation.
 set(OSMESA_DIR ~/opt/osmesa)
 
-set(PYTHON_VERSION 3.6)
+# Directory with the LLVM installation.
+set(LLVM_DIR ~/opt/llvm)
 
-# Python library (tested with Python 3.6.6).
+# Python library (tested with Python 3.6).
 set(PYTHON_LIBRARIES /usr/lib/x86_64-linux-gnu/libpython3.6m.so)
 
-# Directory with Python includes (tested with Python 3.6.6).
+# Directory with Python includes (tested with Python 3.6).
 set(PYTHON_INCLUDE_DIRS /usr/include/python3.6m/)
 ################################################################################
-
 
 # Enable support for C++11.
 set(CPP_STANDARD -std=c++11)
@@ -33,7 +30,7 @@ include_directories(${OSMESA_DIR}/include)
 
 # Pybind11.
 set(PYBIND11_CPP_STANDARD ${CPP_STANDARD})
-set(PYBIND11_PYTHON_VERSION ${PYTHON_VERSION})
+set(PYBIND11_PYTHON_VERSION 3.6)
 add_subdirectory(3rd/pybind11)
 
 # Others.
