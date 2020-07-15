@@ -3,7 +3,7 @@
 
 ################################################################################
 
-# Location of the osmesa installation:
+# Location of the OSMesa installation:
 osmesaprefix="${OSMESA_PREFIX:-/opt/osmesa}"
 
 # Location of the LLVM installation:

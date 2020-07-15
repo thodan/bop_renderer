@@ -2,31 +2,31 @@ cmake_minimum_required(VERSION 2.8.12)
 project(bop_renderer)
 
 
-# USER-SPECIFIC PARAMETERS.
 ################################################################################
-# Directory with the OSMesa installation.
-set(OSMESA_DIR ~/opt/osmesa)
+# Before running cmake, set the following environment variables:
 
-# Directory with the LLVM installation.
-set(LLVM_DIR ~/opt/llvm)
+# OSMESA_PREFIX - Folder with the OSMesa installation
+# PYTHON_PREFIX - Folder with "lib" and "include" subfolders with Python sources
 
-# Python library (tested with Python 3.6).
-set(PYTHON_LIBRARIES /usr/lib/x86_64-linux-gnu/libpython3.6m.so)
-
-# Directory with Python includes (tested with Python 3.6).
-set(PYTHON_INCLUDE_DIRS /usr/include/python3.6m/)
+# Example:
+# export OSMESA_PREFIX=/opt/osmesa
+# export PYTHON_PREFIX=~/.conda/envs/env_name
 ################################################################################
+
 
 # Enable support for C++11.
 set(CPP_STANDARD -std=c++11)
 add_definitions(${CPP_STANDARD})
 
-# LLVM.
-link_directories(${LLVM_DIR}/lib)
+# Python library (tested with Python 3.6).
+set(PYTHON_LIBRARIES $ENV{PYTHON_PREFIX}/lib/libpython3.6m.so)
+
+# Directory with Python includes (tested with Python 3.6).
+set(PYTHON_INCLUDE_DIRS $ENV{PYTHON_PREFIX}/include/python3.6m)
 
 # OSMesa.
-set(OSMESA_LIBRARIES ${OSMESA_DIR}/lib/libOSMesa32.so)
-include_directories(${OSMESA_DIR}/include)
+set(OSMESA_LIBRARIES $ENV{OSMESA_PREFIX}/lib/libOSMesa32.so)
+include_directories($ENV{OSMESA_PREFIX}/include)
 
 # Pybind11.
 set(PYBIND11_CPP_STANDARD ${CPP_STANDARD})
