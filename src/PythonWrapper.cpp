@@ -43,7 +43,11 @@ void PythonWrapper::renderObject(unsigned int handle,
                                  const std::array<float, 9> R,
                                  const std::array<float, 3> t,
                                  float fx, float fy, float cx, float cy,
-                                 float skew, float xZero, float yZero) {
+                                 float skew, float xZero, float yZero,
+                                 bool useUniformColor,
+                                 float uniformColorR,
+                                 float uniformColorG,
+                                 float uniformColorB) {
   glm::mat3 _R;
   for (unsigned int x = 0; x < 3; x++) {
     for (unsigned int y = 0; y < 3; y++) {
@@ -56,8 +60,11 @@ void PythonWrapper::renderObject(unsigned int handle,
     _t[x] = t[x];
   }
 
+  glm::vec3 uniformColor(uniformColorR, uniformColorG, uniformColorB);
+
   Pose pose(_R, _t);
-  renderer.renderObject(handle, pose, fx, fy, cx, cy, skew, xZero, yZero);
+  renderer.renderObject(handle, pose, fx, fy, cx, cy, skew, xZero, yZero,
+                        useUniformColor, uniformColor);
 }
 
 py::array PythonWrapper::getDepthImage(unsigned int handle) {
@@ -102,6 +109,7 @@ py::array PythonWrapper::getDepthImage(unsigned int handle) {
 py::array PythonWrapper::getColorImage(unsigned int handle) {
 
   float *buffData = renderer.getBuffer(handle, OA_COLORS);
+//  float *buffData = renderer.getBuffer(handle, OA_TEXTURED);
 
   int height = renderer.getHeight();
   int width = renderer.getWidth();

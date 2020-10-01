@@ -30,7 +30,11 @@ public:
                     std::array<float, 9> R,
                     std::array<float, 3> t,
                     float fx, float fy, float cx, float cy,
-                    float skew, float xZero, float yZero);
+                    float skew, float xZero, float yZero,
+                    bool useUniformColor,
+                    float uniformColorR,
+                    float uniformColorG,
+                    float uniformColorB);
 
   py::array getDepthImage(unsigned int handle);
 
@@ -61,7 +65,12 @@ PYBIND11_MODULE(bop_renderer, m) {
       py::arg("cy"),
       py::arg("skew")=0.0f,
       py::arg("x_xero")=0.0f,
-      py::arg("y_zero")=0.0f)
+      py::arg("y_zero")=0.0f,
+      py::arg("use_uniform_color")=false,
+      py::arg("uniform_color_r")=0.5,
+      py::arg("uniform_color_g")=0.5,
+      py::arg("uniform_color_b")=0.5
+      )
     .def("get_depth_image", &PythonWrapper::getDepthImage)
     .def("get_color_image", &PythonWrapper::getColorImage)
     .def("get_local_pos_image", &PythonWrapper::getLocalPosImage);

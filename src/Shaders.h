@@ -54,7 +54,7 @@ static string vertexShaderCode = \
 "      gl_Position = uProj * posCam;                                        \n"\
 "  }                                                                          ";
 
-static string fragmentShaderPhongCode = \
+static string fragmentShaderCode = \
 "  #version 330                                                             \n"\
 "                                                                           \n"\
 "  #define OA_LOCALPOS 0                                                    \n"\
@@ -65,6 +65,10 @@ static string fragmentShaderPhongCode = \
 "                                                                           \n"\
 "  // Uniform variables                                                     \n"\
 "  uniform sampler2D uTexture;                                              \n"\
+"  uniform bool uUseFlatShading;                                            \n"\
+"  uniform bool uUseTexture;                                                \n"\
+"  uniform bool uUseUniformColor;                                           \n"\
+"  uniform vec3 uUniformColor;                                              \n"\
 "  uniform vec3 uLightColor;                                                \n"\
 "  uniform float uLightAmbientWeight;                                       \n"\
 "  uniform float uLightDiffuseWeight;                                       \n"\
@@ -88,8 +92,15 @@ static string fragmentShaderPhongCode = \
 "                                                                           \n"\
 "  void main()                                                              \n"\
 "  {                                                                        \n"\
+"      vec3 surfNormalCam;                                                  \n"\
+"      if(uUseFlatShading) {                                                \n"\
+"          surfNormalCam = -normalize(cross(dFdx(vPosCam), dFdy(vPosCam))); \n"\
+"      } else {                                                             \n"\
+"          surfNormalCam = vNormalCam;                                      \n"\
+"      }                                                                    \n"\
+"                                                                           \n"\
 "      float lightDiffuseFactor = max(                                      \n"\
-"        dot(normalize(vLight), normalize(vNormalCam)), 0.0);               \n"\
+"        dot(normalize(vLight), normalize(surfNormalCam)), 0.0);            \n"\
 "                                                                           \n"\
 "      float lightSpecularFactor = pow(                                     \n"\
 "          max(dot(normalize(vView), normalize(vReflect)), 0.0),            \n"\
@@ -100,7 +111,18 @@ static string fragmentShaderPhongCode = \
 "          uLightDiffuseWeight * lightDiffuseFactor +                       \n"\
 "          uLightSpecularWeight * lightSpecularFactor;                      \n"\
 "      //lightFactor = min(lightFactor, 1.0);                               \n"\
-"      vec3 color = min(lightFactor * uLightColor * vColor, 1.0);           \n"\
+"      vec3 surfColor;                                                      \n"\
+"      if(uUseTexture) {                                                    \n"\
+"           surfColor = vec3(texture(                                       \n"\
+"               uTexture, vec2(vTexcoord.x, 1.0 - vTexcoord.y)));           \n"\
+"      }                                                                    \n"\
+"      else if(uUseUniformColor) {                                          \n"\
+"           surfColor = uUniformColor;                                      \n"\
+"      }                                                                    \n"\
+"      else {                                                               \n"\
+"           surfColor = vColor;                                             \n"\
+"      }                                                                    \n"\
+"      vec3 color = min(lightFactor * uLightColor * surfColor, 1.0);        \n"\
 "                                                                           \n"\
 "      // Write object coordinates                                          \n"\
 "      outColor[OA_LOCALPOS] = vec4(vPos, 0.0);                             \n"\
@@ -130,8 +152,12 @@ static string fragmentShaderFlatCode = \
 "                                                                           \n"\
 "  // Uniform variables                                                     \n"\
 "  uniform sampler2D uTexture;                                              \n"\
+"  uniform bool uUseTexture;                                                \n"\
 "  uniform vec3 uLightColor;                                                \n"\
 "  uniform float uLightAmbientWeight;                                       \n"\
+"  uniform float uLightDiffuseWeight;                                       \n"\
+"  uniform float uLightSpecularWeight;                                      \n"\
+"  uniform float uLightSpecularShininess;                                   \n"\
 "                                                                           \n"\
 "  // Varying variables                                                     \n"\
 "  in vec3 vPos;                                                            \n"\
@@ -142,6 +168,8 @@ static string fragmentShaderFlatCode = \
 "  in vec2 vTexcoord;                                                       \n"\
 "  in float vDepth;                                                         \n"\
 "  in vec3 vLight;                                                          \n"\
+"  in vec3 vView;                                                           \n"\
+"  in vec3 vReflect;                                                        \n"\
 "                                                                           \n"\
 "  // Output variables                                                      \n"\
 "  out vec4 outColor[5];                                                    \n"\

@@ -56,10 +56,12 @@ void GPUBuffer::initMesh(Geometry *mesh) {
   glBindTexture(GL_TEXTURE_2D, texture);
 
   if (!mesh->texture.data.empty()) {
+    //std::cout << "Using externally saved texture." << std::endl;
     // Upload texture data if present
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mesh->texture.width, mesh->texture.height,
                  0, GL_RGBA, GL_UNSIGNED_BYTE, mesh->texture.data.data());
   } else {
+    //std::cout << "Using white color." << std::endl;
     // If no texture is given then upload a dummy texture consisting of 1 white pixel
     unsigned char whitePixel[4 * 4] = {255, 255, 255, 255};
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, whitePixel);
@@ -76,7 +78,8 @@ void GPUBuffer::render(const glm::mat4 &modelTrans, const glm::mat4 &viewTrans,
                        float skew, float xZero, float yZero,
                        const glm::vec3 lightCamPos, const glm::vec3 lightColor,
                        float lightAmbientWeight, float lightDiffuseWeight,
-                       float lightSpecularWeight, float lightSpecularShininess) {
+                       float lightSpecularWeight, float lightSpecularShininess,
+                       bool useUniformColor, glm::vec3 uniformColor) {
   // Enable everything
   fbo.enableFBO();
   renderProg.use();
@@ -103,12 +106,19 @@ void GPUBuffer::render(const glm::mat4 &modelTrans, const glm::mat4 &viewTrans,
   // Normal matrix (Ref: http://www.songho.ca/opengl/gl_normaltransform.html)
   glm::mat4 nmTrans = glm::transpose(glm::inverse(mvTrans));
 
+  bool useTexture = !mesh->texture.filename.empty();
+  bool useFlatShading = false;
+
   // Set parameters
   renderProg.setUniform("uMV", mvTrans);
   renderProg.setUniform("uProj", projTrans);
   renderProg.setUniform("uMVP", mvpTrans);
   renderProg.setUniform("uNM", nmTrans);
   renderProg.setUniform("uTexture", 0);
+  renderProg.setUniform("uUseTexture", useTexture);
+  renderProg.setUniform("uUseFlatShading", useFlatShading);
+  renderProg.setUniform("uUseUniformColor", useUniformColor);
+  renderProg.setUniform("uUniformColor", uniformColor);
   renderProg.setUniform("uLightCamPos", lightCamPos);
   renderProg.setUniform("uLightColor", lightColor);
   renderProg.setUniform("uLightAmbientWeight", lightAmbientWeight);
@@ -235,10 +245,8 @@ bool GPUBuffer::initResources(int width, int height, std::string &errorString) {
   // so only initialize them if they are not already initialized
   //if (!renderProg.isLinked()) {
   try {
-    renderProg.compileShader(vertexShaderCode,
-                             GLSLShader::VERTEX);
-    renderProg.compileShader(fragmentShaderPhongCode,
-                             GLSLShader::FRAGMENT);
+    renderProg.compileShader(vertexShaderCode, GLSLShader::VERTEX);
+    renderProg.compileShader(fragmentShaderCode, GLSLShader::FRAGMENT);
     renderProg.link();
   } catch (std::exception &e) {
     errorString = e.what();

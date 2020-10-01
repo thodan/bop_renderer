@@ -44,7 +44,9 @@ public:
 
   void renderObject(unsigned int handle, Pose &pose, float fx, float fy,
                     float cx, float cy, float skew = 0.0f,
-                    float xZero = 0.0f, float yZero = 0.0f);
+                    float xZero = 0.0f, float yZero = 0.0f,
+                    bool useUniformColor = false,
+                    glm::vec3 uniformColor = glm::vec3(1.0, 1.0, 1.0));
 
   // Get the contents of one attribute for the object identified by "handle".
   // Only returns useful values if "renderObject" was called before.

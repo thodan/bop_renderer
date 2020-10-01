@@ -53,8 +53,9 @@ void AbstractLoader::calculateNormals() {
     }
   }
 
-  for (int i = 0; i < geo->normals.size(); ++i)
+  for (int i = 0; i < geo->normals.size(); ++i) {
     geo->normals[i] /= static_cast<float>(numNormals[i]);
+  }
 }
 
 
@@ -131,6 +132,7 @@ bool AbstractLoader::loadTexture() {
   // Load the texture from png
   unsigned int error = lodepng::decode(geo->texture.data, geo->texture.width, geo->texture.height,
                                        geo->texture.filename);
+
   if (error != 0) {
     errorString = lodepng_error_text(error);
     return false;

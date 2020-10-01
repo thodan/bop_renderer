@@ -32,7 +32,8 @@ public:
               float skew, float xZero, float yZero,
               glm::vec3 lightCamPos, glm::vec3 lightColor,
               float lightAmbientWeight, float lightDiffuseWeight,
-              float lightSpecularWeight, float lightSpecularShininess);
+              float lightSpecularWeight, float lightSpecularShininess,
+              bool useUniformColor, glm::vec3 uniformColor);
 
   void getPixelData(ObjectAttribute attr, float *data);
 

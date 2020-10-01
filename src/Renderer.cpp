@@ -125,7 +125,8 @@ void Renderer::removeObject(unsigned int handle) {
 
 void Renderer::renderObject(
     unsigned int handle, Pose &pose, float fx, float fy, float cx, float cy,
-    float skew, float xZero, float yZero) {
+    float skew, float xZero, float yZero, bool useUniformColor,
+    glm::vec3 uniformColor) {
   auto iter = renderers.find(handle);
   if (iter == renderers.end()) {
     std::cerr << "Error: Renderer not found." << std::endl;
@@ -138,7 +139,8 @@ void Renderer::renderObject(
   iter->second->render(modelTrans, viewTrans, fx, fy, cx, cy,
                        skew, xZero, yZero, lightCamPos, lightColor,
                        lightAmbientWeight, lightDiffuseWeight,
-                       lightSpecularWeight, lightSpecularShininess);
+                       lightSpecularWeight, lightSpecularShininess,
+                       useUniformColor, uniformColor);
 }
 
 void Renderer::getBuffer(unsigned int handle, ObjectAttribute attr, float *data) {
