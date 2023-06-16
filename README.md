@@ -18,24 +18,16 @@ cd osmesa-install/build
 ../osmesa-install.sh
 ```
 
+On Debian/Ubuntu systems, this is also available through `sudo apt install libosmesa6-dev`.
+
 Moreover, the BOP renderer depends on the following header-only libraries, which are provided in folder *3rd* (no installation is required for these libraries): [glm](https://glm.g-truc.net/0.9.9/index.html), [lodepng](https://lodev.org/lodepng/), [pybind11](https://github.com/pybind/pybind11), [RPly](http://w3.impa.br/~diego/software/rply/).
 
 ### Compilation
 
-In *CMakeLists.txt*, set the following paths:
-```
-set(LLVM_DIR ...)
-set(OSMESA_DIR ...)
-set(PYTHON_LIBRARIES ...)
-set(PYTHON_INCLUDE_DIRS ...)
-```
-
 Compile by:
 ```
-mkdir build
-cd build
-cmake .. -DCMAKE_BUILD_TYPE=Release
-make
+cmake -B build -S . -DCMAKE_BUILD_TYPE=Release
+cmake --build build
 ```
 
 Note: The BOP renderer was tested on Linux only.
