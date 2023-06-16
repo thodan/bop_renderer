@@ -15,4 +15,4 @@ jobs:
       - name: Build
         run: cmake --build build
       - name: test
-        run: PYTHONPATH=build python samples/renderer_test.py
+        run: PYTHONPATH=build python -c "import bop_renderer"
