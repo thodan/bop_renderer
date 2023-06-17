@@ -1,42 +1,12 @@
-cmake_minimum_required(VERSION 2.8.12)
-project(bop_renderer)
+cmake_minimum_required(VERSION 3.16)
+project(bop_renderer LANGUAGES C CXX)
 
+set(CMAKE_MODULE_PATH CMake $CMAKE_MODULE_PATH)
 
-################################################################################
-# Before running cmake, set the following environment variables:
+find_package(Python COMPONENTS Interpreter Development)
+find_package(OSMesa REQUIRED)
 
-# OSMESA_PREFIX - Folder with the OSMesa installation
-# PYTHON_PREFIX - Folder with "lib" and "include" subfolders with Python sources
-
-# Example:
-# export OSMESA_PREFIX=/opt/osmesa
-# export PYTHON_PREFIX=~/.conda/envs/env_name
-################################################################################
-
-
-# Enable support for C++11.
-set(CPP_STANDARD -std=c++11)
-add_definitions(${CPP_STANDARD})
-
-# Python library (tested with Python 3.6).
-set(PYTHON_LIBRARIES $ENV{PYTHON_PREFIX}/lib/libpython3.6m.so)
-
-# Directory with Python includes (tested with Python 3.6).
-set(PYTHON_INCLUDE_DIRS $ENV{PYTHON_PREFIX}/include/python3.6m)
-
-# OSMesa.
-set(OSMESA_LIBRARIES $ENV{OSMESA_PREFIX}/lib/libOSMesa32.so)
-include_directories($ENV{OSMESA_PREFIX}/include)
-
-# Pybind11.
-set(PYBIND11_CPP_STANDARD ${CPP_STANDARD})
-set(PYBIND11_PYTHON_VERSION 3.6)
 add_subdirectory(3rd/pybind11)
-
-# Others.
-include_directories(src)
-include_directories(3rd)
-include_directories(3rd/glm)
 
 # Header files.
 set(HEADERFILES
@@ -73,4 +43,6 @@ set(SOURCEFILES
 # Python module.
 pybind11_add_module(bop_renderer MODULE
         src/PythonWrapper.cpp ${HEADERFILES} ${SOURCEFILES})
-target_link_libraries(bop_renderer PRIVATE ${OSMESA_LIBRARIES})
+
+target_link_libraries(bop_renderer PRIVATE OSMesa::OSMesa)
+target_include_directories(bop_renderer PRIVATE src 3rd 3rd/glm)
